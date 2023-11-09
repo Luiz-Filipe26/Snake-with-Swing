@@ -4,10 +4,11 @@ public class Snake {
     
     public static void main(String[] args) {
         SnakeView.getInstancia().setVisible(true);
-        SnakeController snakeModel = SnakeController.getInstancia();
-        snakeModel.adicionarSnakeView();
+        SnakeController snakeController = SnakeController.getInstancia();
+        snakeController.adicionarSnakeView();
+        snakeController.adicionarCampoJogo();
         SnakeLogic snakeLogic = new SnakeLogic();
-        snakeModel.adicionarObserver(snakeLogic);
+        snakeController.adicionarObserver(snakeLogic);
         snakeLogic.start();
     }
 }

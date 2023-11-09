@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 public class CampoJogo {
     private static CampoJogo campoJogo;
@@ -69,6 +73,13 @@ public class CampoJogo {
         this.xMargem = xMargem;
         this.yMargem = yMargem;
         this.gPanel = gPanel;
+        
+        try {
+            imagemCompleta = ImageIO.read(getClass().getResource("/snake/snake-graphics.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(SnakeView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         snakeController = SnakeController.getInstancia();
         view = SnakeView.getInstancia();
         inicializarMaps();
@@ -160,7 +171,7 @@ public class CampoJogo {
         gBufferExterno.drawImage(buffer, xMargem, yMargem, view);
     }
     
-    private void novoJogo() {
+    public void novoJogo() {
         gBuffer.setColor(Color.white);
         gBuffer.fillRect(0, 0, (unidadeLargura*larguraJogo)- 2*xMargem, (unidadeAltura*alturaJogo)- 2*yMargem);
         gBufferExterno.drawImage(buffer, xMargem, yMargem, view);

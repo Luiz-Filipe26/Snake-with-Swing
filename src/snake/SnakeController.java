@@ -1,15 +1,16 @@
 
 package snake;
 
+import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class SnakeController {
     
     private static SnakeController sc;
     private static SnakeView view;
+    private static CampoJogo campoJogo;
     
     private List<ViewObserver> observers;
     
@@ -39,6 +40,13 @@ public class SnakeController {
         view = SnakeView.getInstancia();
     }
     
+    public void adicionarCampoJogo() {
+        int xMargem = view.getXMargem();
+        int yMargem = view.getYMargem();
+        Graphics gPanel = view.getGrafico();
+        campoJogo = CampoJogo.getInstancia(xMargem, yMargem, gPanel);
+    }
+    
     public void notificaNovoRecordeSeFor(int pontos) {
         if (GerenciadorRecordes.getInstancia().isNovoRecorde(pontos)) {
             view.notificaNovoRecorde(pontos);
@@ -57,8 +65,12 @@ public class SnakeController {
         view.atualizarNumMaca(comidas);
     }
     
+    public void novoJogoCampo() {
+        campoJogo.novoJogo();
+    }
+    
     public void desenharJogo(Cobrinha cobrinhaObj, boolean apagarPonto, Point posMaca, boolean apagarMaca, boolean macaGrande) {
-        view.desenharJogo(cobrinhaObj, apagarPonto, posMaca, apagarMaca, macaGrande);
+        campoJogo.desenharJogo(cobrinhaObj, apagarPonto, posMaca, apagarMaca, macaGrande);
     }
     
     public void perdeuOJogo() {
