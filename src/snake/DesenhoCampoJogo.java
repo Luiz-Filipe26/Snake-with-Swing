@@ -5,25 +5,19 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
-public class CampoJogo {
-    private static CampoJogo campoJogo;
+public class DesenhoCampoJogo {
+    private static DesenhoCampoJogo desenhoCampoJogo;
     private static SnakeController snakeController;
-    private static SnakeView view;
-    
     
     private int unidadeLargura;
     private int unidadeAltura;
@@ -40,59 +34,51 @@ public class CampoJogo {
     private Graphics gBuffer;
     private Graphics gBufferExterno;
     private Graphics gPanel;
-    private BufferedImage buffer;
     private BufferedImage bufferExterno;
+    private BufferedImage buffer;
     
-    private HashSet<Integer> direcoesValidas;
-    private Queue<Point> direcao = new LinkedList();
     private BufferedImage imagemCompleta;
     private HashMap<ArrayList<Point>, Point> mapaCauda ;
     private HashMap<Point, Point> mapaCaudaPonta;
     private HashMap<Point, Point> mapaCabeca;
     private HashMap<Point, Image> mapaImagens;
     
-    public static synchronized CampoJogo getInstancia(int xMargem, int yMargem, Graphics gPanel) {
-        if (campoJogo == null) {
-            campoJogo = new CampoJogo(xMargem, yMargem, gPanel);
+    public static synchronized DesenhoCampoJogo getInstancia() {
+        if (desenhoCampoJogo == null) {
+            desenhoCampoJogo = new DesenhoCampoJogo();
         }
-        return campoJogo;
+        return desenhoCampoJogo;
     }
     
-    private CampoJogo(int xMargem, int yMargem, Graphics gPanel) {
-        DIREITA = new Point(unidadeLargura, 0);
-        ESQUERDA = new Point(-unidadeLargura, 0);
-        CIMA = new Point(0, -unidadeAltura);
-        BAIXO = new Point(0, unidadeAltura);
+    private DesenhoCampoJogo() {
+        
+        snakeController = SnakeController.getInstancia();
+        gPanel = snakeController.getGrafico();
         
         int[] valoresDimensionais = snakeController.getValoresDimensionais();
         unidadeLargura = valoresDimensionais[0];
         unidadeAltura = valoresDimensionais[1];
         larguraJogo = valoresDimensionais[2];
         alturaJogo = valoresDimensionais[3];
+        xMargem = valoresDimensionais[4];
+        yMargem = valoresDimensionais[5];
         
-        this.xMargem = xMargem;
-        this.yMargem = yMargem;
-        this.gPanel = gPanel;
+        DIREITA = new Point(unidadeLargura, 0);
+        ESQUERDA = new Point(-unidadeLargura, 0);
+        CIMA = new Point(0, -unidadeAltura);
+        BAIXO = new Point(0, unidadeAltura);
         
         try {
             imagemCompleta = ImageIO.read(getClass().getResource("/snake/snake-graphics.png"));
         } catch (IOException ex) {
-            Logger.getLogger(SnakeView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DesenhoCampoJogo.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        snakeController = SnakeController.getInstancia();
-        view = SnakeView.getInstancia();
         inicializarMaps();
         inicializarDesenho();
     }
     
     private void inicializarMaps() {
-        direcoesValidas = new HashSet();
-        int[] direcoesValidasVet = {KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT,
-                                    KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D};
-        for (int d : direcoesValidasVet) {
-            direcoesValidas.add(d);
-        }
         
         mapaCauda = new HashMap<>();
         Point[][] equivalenciasCauda = { 
@@ -147,9 +133,10 @@ public class CampoJogo {
     }
     
     private void inicializarDesenho() {
-        int largura = larguraJogo * unidadeLargura;
-        int altura = alturaJogo * unidadeAltura;
+        int largura = 2*xMargem + larguraJogo * unidadeLargura;
+        int altura = 2*yMargem + alturaJogo * unidadeAltura;
         
+        bufferExterno = snakeController.getBuffer();
         bufferExterno = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_ARGB);
         gBufferExterno = bufferExterno.getGraphics();
         buffer = new BufferedImage(largura-xMargem, altura-yMargem, BufferedImage.TYPE_INT_ARGB);
@@ -157,49 +144,52 @@ public class CampoJogo {
 
         Image imagemFundo = mapaImagens.get(new Point(1, 2));
         for(int x=0; x<largura; x+=xMargem) {
-            gBufferExterno.drawImage(imagemFundo, x, 0, view);
-            gBufferExterno.drawImage(imagemFundo, x, altura-yMargem, view);
+            gBufferExterno.drawImage(imagemFundo, x, 0, null);
+            gBufferExterno.drawImage(imagemFundo, x, altura-yMargem, null);
         }
 
         for(int y=0; y<altura; y+=yMargem) {
-            gBufferExterno.drawImage(imagemFundo, 0, y, view);
-            gBufferExterno.drawImage(imagemFundo, largura-xMargem, y, view);
+            gBufferExterno.drawImage(imagemFundo, 0, y, null);
+            gBufferExterno.drawImage(imagemFundo, largura-xMargem, y, null);
         }
 
         gBuffer.setColor(Color.white);
         gBuffer.fillRect(0, 0, largura- 2*xMargem, altura- 2*yMargem);
-        gBufferExterno.drawImage(buffer, xMargem, yMargem, view);
+        gBufferExterno.drawImage(buffer, xMargem, yMargem, null);
     }
     
     public void novoJogo() {
         gBuffer.setColor(Color.white);
-        gBuffer.fillRect(0, 0, (unidadeLargura*larguraJogo)- 2*xMargem, (unidadeAltura*alturaJogo)- 2*yMargem);
-        gBufferExterno.drawImage(buffer, xMargem, yMargem, view);
+        gBuffer.fillRect(0, 0, (unidadeLargura*larguraJogo), (unidadeAltura*alturaJogo));
+        gBufferExterno.drawImage(buffer, xMargem, yMargem, null);
     }
     
-    public synchronized void desenharJogo(Cobrinha cobrinhaObj, boolean crescendo, Point posMaca, boolean apagarMaca, boolean macaGrande) {   
-        List<Point> cobrinha = cobrinhaObj.getCobrinha();
-        Map<Point, Point> direcoesCobrinha = cobrinhaObj.getDirecoesCobrinha();
+    public synchronized void desenharJogo(Cobrinha cobrinha, boolean crescendo, List<Point> posicoesMacaComida, List<Point> posicoesMaca) {   
+        List<Point> corpoCobrinha = cobrinha.getCorpoCobrinha();
+        Map<Point, Point> direcoesCobrinha = cobrinha.getDirecoesCobrinha();
         
-        Point cabeca = cobrinha.get(0);
-        Point cauda = cobrinha.get(1);
-        Point caudaPosterior = cobrinha.get(cobrinha.size() - 2);
-        Point caudaPonta = cobrinha.get(cobrinha.size() - 1);
+        Point cabeca = corpoCobrinha.get(0);
+        Point cauda = corpoCobrinha.get(1);
+        Point caudaPosterior = corpoCobrinha.get(corpoCobrinha.size() - 2);
+        Point caudaPonta = corpoCobrinha.get(corpoCobrinha.size() - 1);
         
         if (!crescendo) {
-            desenhaPonto(cobrinhaObj.getPontoRemovido());
+            desenhaPonto(cobrinha.getPontoRemovido());
         }
-
-        if (apagarMaca) {
-            desenhaPonto(cobrinhaObj.getPontoRemovido());
-            desenhaPonto(posMaca);
-            if(macaGrande) {
-                desenhaPonto(new Point(posMaca.x + unidadeLargura, posMaca.y));
-                desenhaPonto(new Point(posMaca.x, posMaca.y + unidadeAltura));
-                desenhaPonto(new Point(posMaca.x + unidadeLargura, posMaca.y + unidadeAltura));
+        
+        if(posicoesMacaComida != null) {
+            for(Point p : posicoesMacaComida) {
+                desenhaPonto(p);
             }
-        } else {
-            desenhaPontoImagem(mapaImagens.get(new Point(0, 3 - (macaGrande ? 1 : 0))), posMaca);
+        }
+        
+        if(posicoesMaca != null) {
+            if(posicoesMaca.size() == 1) {
+                desenhaPontoImagem(mapaImagens.get(new Point(0, 3)), posicoesMaca.get(0));
+            }
+            else if(posicoesMaca.size() == 4) {
+                desenhaPontoImagem(mapaImagens.get(new Point(0, 2)), posicoesMaca.get(0));
+            }
         }
 
         desenhaPontoImagem(getCabecaImagem(direcoesCobrinha.get(cabeca)), cabeca);
@@ -214,12 +204,12 @@ public class CampoJogo {
         desenhaPonto(caudaPonta);
         desenhaPontoImagem(getCaudaPontaImagem(direcoesCobrinha.get(caudaPosterior)), caudaPonta);
         
-        gBufferExterno.drawImage(buffer, xMargem, yMargem, view);
-        gPanel.drawImage(bufferExterno, 0, 0, view);
+        gBufferExterno.drawImage(buffer, xMargem, yMargem, null);
+        gPanel.drawImage(bufferExterno, 0, 0, null);
     }
     
     private void desenhaPontoImagem(Image im, Point p) {
-        gBuffer.drawImage(im, p.x, p.y, view);
+        gBuffer.drawImage(im, p.x, p.y, null);
     }
     
     private void desenhaPonto(Point p) {

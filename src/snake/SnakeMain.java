@@ -1,6 +1,6 @@
 package snake;
 
-public class Snake {
+public class SnakeMain {
     
     public static void main(String[] args) {
         SnakeView.getInstancia().setVisible(true);

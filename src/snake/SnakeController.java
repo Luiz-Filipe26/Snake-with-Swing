@@ -3,53 +3,61 @@ package snake;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SnakeController {
     
-    private static SnakeController sc;
-    private static SnakeView view;
-    private static CampoJogo campoJogo;
+    private static SnakeController snakeController;
+    private static SnakeView snakeView;
+    private static DesenhoCampoJogo desenhoCampoJogo;
     
     private List<ViewObserver> observers;
     
     
     public static SnakeController getInstancia() {
-        if(sc == null) {
-            sc = new SnakeController();
+        if(snakeController == null) {
+            snakeController = new SnakeController();
         }
-        return sc;
+        return snakeController;
     }
     
     private SnakeController() {
         observers = new ArrayList<>();
     }
     
+    public void adicionarSnakeView() {
+        snakeView = SnakeView.getInstancia();
+    }
+    
+    public void adicionarCampoJogo() {
+        desenhoCampoJogo = DesenhoCampoJogo.getInstancia();
+    }
+    
     public int[] getValoresDimensionais() {
-        int[] valores = new int[4];
-        valores[0] = view.getUnidadeLargura();
-        valores[1] = view.getUnidadeAltura();
-        valores[2] = (view.getJpanelLargura() - (view.getXMargem() * 2)) / valores[0];
-        valores[3] = (view.getJpanelAltura() - (view.getYMargem() * 2)) / valores[1];
+        int[] valores = {
+            snakeView.getUnidadeLargura(),
+            snakeView.getUnidadeAltura(),
+            (snakeView.getJpanelLargura() - (snakeView.getXMargem() * 2)) / snakeView.getUnidadeLargura(),
+            (snakeView.getJpanelAltura() - (snakeView.getYMargem() * 2)) / snakeView.getUnidadeAltura(),
+            snakeView.getXMargem(),
+            snakeView.getYMargem()};
         
         return valores;
     }
     
-    public void adicionarSnakeView() {
-        view = SnakeView.getInstancia();
+    public Graphics getGrafico() {
+        return snakeView.getGrafico();
     }
     
-    public void adicionarCampoJogo() {
-        int xMargem = view.getXMargem();
-        int yMargem = view.getYMargem();
-        Graphics gPanel = view.getGrafico();
-        campoJogo = CampoJogo.getInstancia(xMargem, yMargem, gPanel);
+    public BufferedImage getBuffer() {
+        return snakeView.getBuffer();
     }
     
     public void notificaNovoRecordeSeFor(int pontos) {
         if (GerenciadorRecordes.getInstancia().isNovoRecorde(pontos)) {
-            view.notificaNovoRecorde(pontos);
+            snakeView.notificaNovoRecorde(pontos);
         }
     }
     
@@ -62,23 +70,23 @@ public class SnakeController {
     }
     
     public void atualizarNumMaca(int comidas) {
-        view.atualizarNumMaca(comidas);
+        snakeView.atualizarNumMaca(comidas);
     }
     
     public void novoJogoCampo() {
-        campoJogo.novoJogo();
+        desenhoCampoJogo.novoJogo();
     }
     
-    public void desenharJogo(Cobrinha cobrinhaObj, boolean apagarPonto, Point posMaca, boolean apagarMaca, boolean macaGrande) {
-        campoJogo.desenharJogo(cobrinhaObj, apagarPonto, posMaca, apagarMaca, macaGrande);
+    public void desenharJogo(Cobrinha cobrinha, boolean crescendo, List<Point> posicoesMacaComida, List<Point> posicoesMaca) {
+        desenhoCampoJogo.desenharJogo(cobrinha, crescendo, posicoesMacaComida, posicoesMaca);
     }
     
     public void perdeuOJogo() {
-        view.perdeuOJogo();
+        snakeView.perdeuOJogo();
     }
     
     public void venceuOJogo() {
-        view.venceuOJogo();
+        snakeView.venceuOJogo();
     }
     
     public void adicionarObserver(ViewObserver observer) {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Cobrinha {
-    private List<Point> cobrinha;
+    private List<Point> corpoCobrinha;
     private Map<Point, Point> direcoesCobrinha;
     
     private final int unidadeLargura;
@@ -22,6 +22,7 @@ public class Cobrinha {
     public final Point BAIXO;
     
     private Point pontoRemovido;
+    private Point direcaoPontoRemovido;
     
     public Cobrinha() {
         direcoesCobrinha = new HashMap();
@@ -40,8 +41,8 @@ public class Cobrinha {
         criarCobrinhaInicial();
     }
     
-    public List<Point> getCobrinha() {
-        return cobrinha;
+    public List<Point> getCorpoCobrinha() {
+        return corpoCobrinha;
     }
     
     public Map<Point, Point> getDirecoesCobrinha() {
@@ -53,12 +54,12 @@ public class Cobrinha {
     }
     
     public int getTamanho() {
-        return cobrinha.size();
+        return corpoCobrinha.size();
     }
     
-    public boolean moverCobrinha(Point direcao, boolean atravessarBordas, boolean crescer) {
-        Point novaCabeca = new Point(cobrinha.get(0).x + direcao.x, cobrinha.get(0).y + direcao.y);
-        if (cobrinha.contains(novaCabeca)) {
+    public boolean moverCobrinha(Point direcao, boolean atravessarBordas) {
+        Point novaCabeca = new Point(corpoCobrinha.get(0).x + direcao.x, corpoCobrinha.get(0).y + direcao.y);
+        if (corpoCobrinha.contains(novaCabeca)) {
             return false;
         } else if (atravessouBorda(novaCabeca)) {
             if (!atravessarBordas) {
@@ -66,13 +67,22 @@ public class Cobrinha {
             }
             novaCabeca = novaDirecaoAlemDaBorda(novaCabeca);
         }
-        cobrinha.add(0, novaCabeca);
+        corpoCobrinha.add(0, novaCabeca);
         direcoesCobrinha.put(novaCabeca, direcao);
-        if(!crescer) {
-            pontoRemovido = cobrinha.remove(cobrinha.size()-1);
-            direcoesCobrinha.remove(pontoRemovido);
-        }
+        
+        pontoRemovido = corpoCobrinha.remove(corpoCobrinha.size()-1);
+        direcaoPontoRemovido = direcoesCobrinha.remove(pontoRemovido);
+        
         return true;
+    }
+    
+    public void crescerCobrinha() {
+        if(pontoRemovido != null) {
+            corpoCobrinha.add(pontoRemovido);
+            direcoesCobrinha.put(pontoRemovido, direcaoPontoRemovido);
+            pontoRemovido = null;
+            direcaoPontoRemovido = null;
+        }
     }
     
     private boolean atravessouBorda(Point p) {
@@ -86,14 +96,14 @@ public class Cobrinha {
     }
     
     private void criarCobrinhaInicial() {
-        cobrinha = new ArrayList();
-        cobrinha.add(new Point(unidadeLargura * larguraJogo / 2, unidadeAltura * alturaJogo / 2));
-        cobrinha.add(new Point(cobrinha.get(0).x - unidadeLargura, unidadeAltura * alturaJogo / 2));
-        cobrinha.add(new Point(cobrinha.get(1).x - unidadeLargura, unidadeAltura * alturaJogo / 2));
+        corpoCobrinha = new ArrayList();
+        corpoCobrinha.add(new Point(unidadeLargura * larguraJogo / 2, unidadeAltura * alturaJogo / 2));
+        corpoCobrinha.add(new Point(corpoCobrinha.get(0).x - unidadeLargura, corpoCobrinha.get(0).y));
+        corpoCobrinha.add(new Point(corpoCobrinha.get(1).x - unidadeLargura, corpoCobrinha.get(0).y));
         
         direcoesCobrinha = new HashMap();
-        direcoesCobrinha.put(cobrinha.get(0), DIREITA);
-        direcoesCobrinha.put(cobrinha.get(1), DIREITA);
-        direcoesCobrinha.put(cobrinha.get(2), DIREITA);
+        direcoesCobrinha.put(corpoCobrinha.get(0), DIREITA);
+        direcoesCobrinha.put(corpoCobrinha.get(1), DIREITA);
+        direcoesCobrinha.put(corpoCobrinha.get(2), DIREITA);
     }
 }

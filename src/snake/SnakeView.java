@@ -35,13 +35,12 @@ public class SnakeView extends javax.swing.JFrame {
     
     private static SnakeView view;
     private SnakeController snakeController;
+    public BufferedImage bufferExterno;
     
-    private int xMargem;
-    private int yMargem;
-    private int unidadeLargura;
-    private int unidadeAltura;
-    private int largura;
-    private int altura;
+    private final int xMargem;
+    private final int yMargem;
+    private final int unidadeLargura;
+    private final int unidadeAltura;
     private int tamanhoFonte;
     private int dificuldade;
     private int pontos;
@@ -83,6 +82,11 @@ public class SnakeView extends javax.swing.JFrame {
         jButtonFecharJogo.setVisible(false);
         jButtonSalvarRecorde.setVisible(false);
         
+        direcoesValidas = new HashSet(){{
+            add(KeyEvent.VK_UP); add(KeyEvent.VK_DOWN); add(KeyEvent.VK_LEFT); add(KeyEvent.VK_RIGHT);
+            add(KeyEvent.VK_W); add(KeyEvent.VK_S); add(KeyEvent.VK_A); add(KeyEvent.VK_D);
+        }};
+        
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -96,6 +100,10 @@ public class SnakeView extends javax.swing.JFrame {
     
     public Graphics getGrafico() {
         return jPanelGrafico.getGraphics();
+    }
+    
+    public BufferedImage getBuffer() {
+        return bufferExterno;
     }
     
     public int getUnidadeLargura() {
