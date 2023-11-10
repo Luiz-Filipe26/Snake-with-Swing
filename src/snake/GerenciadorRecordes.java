@@ -43,7 +43,6 @@ public class GerenciadorRecordes {
                     String nome = linha.substring(0, lastSpaceIndex);
                     String pontosStr = linha.substring(lastSpaceIndex + 1);
                     if (isNumero(pontosStr)) {
-                        int pontos = Integer.parseInt(pontosStr);
                         recordes.add(List.of(nome, pontosStr));
                     }
                 }

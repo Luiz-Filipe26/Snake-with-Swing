@@ -2,25 +2,14 @@ package snake;
 
 
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -41,7 +30,6 @@ public class SnakeView extends javax.swing.JFrame {
     private final int yMargem;
     private final int unidadeLargura;
     private final int unidadeAltura;
-    private int tamanhoFonte;
     private int dificuldade;
     private int pontos;
     private boolean jogoFechado;
@@ -71,7 +59,6 @@ public class SnakeView extends javax.swing.JFrame {
         ESQUERDA = new Point(-unidadeLargura, 0);
         CIMA = new Point(0, -unidadeAltura);
         BAIXO = new Point(0, unidadeAltura);
-        tamanhoFonte = 16;
         jogoFechado = true;
         dificuldade = 5;
         direcao.add(new Point(30, 0));
