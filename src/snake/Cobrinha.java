@@ -24,6 +24,8 @@ public class Cobrinha {
     private Point pontoRemovido;
     private Point direcaoPontoRemovido;
     
+    private boolean atravessarBordas;
+    
     public Cobrinha() {
         direcoesCobrinha = new HashMap();
         
@@ -41,8 +43,16 @@ public class Cobrinha {
         criarCobrinhaInicial();
     }
     
+    public void setAtravessarBordas(boolean atravessarBordas) {
+        this.atravessarBordas = atravessarBordas;
+    }
+    
     public List<Point> getCorpoCobrinha() {
         return corpoCobrinha;
+    }
+    
+    public Point getCabeca() {
+        return corpoCobrinha.get(0);
     }
     
     public Map<Point, Point> getDirecoesCobrinha() {
@@ -57,7 +67,11 @@ public class Cobrinha {
         return corpoCobrinha.size();
     }
     
-    public boolean moverCobrinha(Point direcao, boolean atravessarBordas) {
+    public boolean checaColisaoPonto(Point ponto) {
+        return corpoCobrinha.contains(ponto);
+    }
+    
+    public boolean moverCobrinha(Point direcao) {
         Point novaCabeca = new Point(corpoCobrinha.get(0).x + direcao.x, corpoCobrinha.get(0).y + direcao.y);
         if (corpoCobrinha.contains(novaCabeca)) {
             return false;

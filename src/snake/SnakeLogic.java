@@ -91,6 +91,7 @@ public class SnakeLogic extends Thread implements ViewObserver {
 
 
         cobrinha = new Cobrinha();
+        cobrinha.setAtravessarBordas(atravessarBordas);
         Point direcaoAtual = DIREITA;
         List<Point> posicoesMacaComida;
 
@@ -100,12 +101,12 @@ public class SnakeLogic extends Thread implements ViewObserver {
         while (!jogoFechado && cobrinha.getTamanho() < areaJogo) {
             direcaoAtual = obterDirecaoTeclado(direcaoAtual);
 
-            if(!cobrinha.moverCobrinha(direcaoAtual, atravessarBordas)) {
+            if(!cobrinha.moverCobrinha(direcaoAtual)) {
                 snakeController.perdeuOJogo();
                 break;
             }
 
-            if (posicoesMaca.contains(cobrinha.getCorpoCobrinha().get(0))) {
+            if (posicoesMaca.contains(cobrinha.getCabeca())) {
                 pontos += macaGrande ? 4 : 1;
                 qtdCrescer += macaGrande ? 4 : 1;
                 snakeController.atualizarNumMaca(pontos);
@@ -203,7 +204,7 @@ public class SnakeLogic extends Thread implements ViewObserver {
 
     private boolean isPosicaoMacaValida(List<Point> posicoesMaca) {
         for (Point pm : posicoesMaca) {
-            if (cobrinha.getCorpoCobrinha().contains(pm) && !cobrinha.getCorpoCobrinha().get(0).equals(pm)) {
+            if (cobrinha.checaColisaoPonto(pm) && !cobrinha.getCabeca().equals(pm)) {
                 return true;
             }
         }
