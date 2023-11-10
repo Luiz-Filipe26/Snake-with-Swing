@@ -127,7 +127,7 @@
         <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPanelGraficoMouseEntered"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JPanel() {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        super.paintComponent(g);&#xa;        if (bufferExterno != null) {&#xa;            g.drawImage(bufferExterno, 0, 0, this);&#xa;        }&#xa;    }&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JPanel() {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        super.paintComponent(g);&#xa;        if (bufferExterno != null) {&#xa;            g.drawImage(bufferExterno, 0, 0, null);&#xa;        }&#xa;    }&#xa;}"/>
       </AuxValues>
 
       <Layout>

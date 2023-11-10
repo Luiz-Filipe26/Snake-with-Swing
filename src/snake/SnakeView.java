@@ -69,6 +69,8 @@ public class SnakeView extends javax.swing.JFrame {
         jButtonFecharJogo.setVisible(false);
         jButtonSalvarRecorde.setVisible(false);
         
+        
+        bufferExterno = new BufferedImage(jPanelGrafico.getWidth(), jPanelGrafico.getHeight(), BufferedImage.TYPE_INT_ARGB);
         direcoesValidas = new HashSet(){{
             add(KeyEvent.VK_UP); add(KeyEvent.VK_DOWN); add(KeyEvent.VK_LEFT); add(KeyEvent.VK_RIGHT);
             add(KeyEvent.VK_W); add(KeyEvent.VK_S); add(KeyEvent.VK_A); add(KeyEvent.VK_D);
@@ -131,7 +133,7 @@ public class SnakeView extends javax.swing.JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (bufferExterno != null) {
-                    g.drawImage(bufferExterno, 0, 0, this);
+                    g.drawImage(bufferExterno, 0, 0, null);
                 }
             }
         };

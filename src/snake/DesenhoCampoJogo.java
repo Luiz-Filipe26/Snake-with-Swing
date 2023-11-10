@@ -53,7 +53,6 @@ public class DesenhoCampoJogo {
     private DesenhoCampoJogo() {
         
         snakeController = SnakeController.getInstancia();
-        gPanel = snakeController.getGrafico();
         
         int[] valoresDimensionais = snakeController.getValoresDimensionais();
         unidadeLargura = valoresDimensionais[0];
@@ -136,8 +135,9 @@ public class DesenhoCampoJogo {
         int largura = 2*xMargem + larguraJogo * unidadeLargura;
         int altura = 2*yMargem + alturaJogo * unidadeAltura;
         
+        gPanel = snakeController.getGrafico();
         bufferExterno = snakeController.getBuffer();
-        bufferExterno = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_ARGB);
+        
         gBufferExterno = bufferExterno.getGraphics();
         buffer = new BufferedImage(largura-xMargem, altura-yMargem, BufferedImage.TYPE_INT_ARGB);
         gBuffer = buffer.getGraphics();
