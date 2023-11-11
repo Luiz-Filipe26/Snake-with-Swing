@@ -13,7 +13,7 @@ public class SnakeController {
     private static SnakeView snakeView;
     private static DesenhoCampoJogo desenhoCampoJogo;
     
-    private List<ViewObserver> observers;
+    private final List<ViewObserver> observers;
     
     
     public static SnakeController getInstancia() {

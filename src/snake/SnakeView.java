@@ -38,7 +38,6 @@ public class SnakeView extends javax.swing.JFrame {
     public final Point CIMA;
     public final Point BAIXO;
     private HashSet<Integer> direcoesValidas;
-    private Queue<Point> direcao = new LinkedList();
     
     public static SnakeView getInstancia() {
         if(view == null) {
@@ -61,7 +60,6 @@ public class SnakeView extends javax.swing.JFrame {
         BAIXO = new Point(0, unidadeAltura);
         jogoFechado = true;
         dificuldade = 5;
-        direcao.add(new Point(30, 0));
         
         initComponents();
         requestFocus();

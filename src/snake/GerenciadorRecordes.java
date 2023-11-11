@@ -1,6 +1,12 @@
 package snake;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +52,7 @@ public class GerenciadorRecordes {
                         recordes.add(List.of(nome, pontosStr));
                     }
                 }
-}
+        }
 
         } catch (IOException e) {
             return null;

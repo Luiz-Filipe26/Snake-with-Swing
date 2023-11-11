@@ -12,7 +12,7 @@ public class SnakeLogic extends Thread implements ViewObserver {
 
     private final SnakeController snakeController;
     private final Object lock;
-    private Queue<Point> direcoesTeclado = new LinkedList();
+    private final Queue<Point> direcoesTeclado = new LinkedList();
     private Cobrinha cobrinha;
     
     private final int unidadeLargura;
@@ -52,11 +52,13 @@ public class SnakeLogic extends Thread implements ViewObserver {
         novoJogo = false;
         viewFechada = false;
         areaJogo = larguraJogo * alturaJogo;
+        
         NIVEIS_SUBIDOS_EM_UM_JOGO = 3;
         DIFERENCA_VELOCIDADE_POR_DIFICULDADE = 0.5f;
-        taxaAumento = DIFERENCA_VELOCIDADE_POR_DIFICULDADE * NIVEIS_SUBIDOS_EM_UM_JOGO / areaJogo;
         VELOCIDADE_PADRAO = 5;
         DIFICULDADE_PADRAO = 5;
+        
+        taxaAumento = DIFERENCA_VELOCIDADE_POR_DIFICULDADE * NIVEIS_SUBIDOS_EM_UM_JOGO / areaJogo;
         
         DIREITA = new Point(unidadeLargura, 0);
         ESQUERDA = new Point(-unidadeLargura, 0);
